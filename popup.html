@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+    
+    html {
+      margin:0;
+      padding:0;
+    }
+    body {
+      margin:0;
+      padding:0;
+      width:104px;
+    }
+    button {
+      font-size:0px;
+      vertical-align:bottom;
+      cursor:pointer;
+      border-radius:2px;
+      background-color:rgba(0,0,0,.85);
+      background-position:center center;
+      background-repeat:no-repeat;
+      background-attachment:scroll;
+      height:25px;
+      width:25px;
+      border:0;
+      margin:0 1px 0 0;
+    }
+    button:last-of-type {
+      margin-right:0;
+    }
+    button:hover {
+      background-color:rgba(0,0,0,.75);
+    }
+    button[disabled="disabled"] {
+      cursor:default;
+      opacity:.2;
+    }
+    button[disabled="disabled"]:hover {
+      background-color:rgba(0,0,0,.85);
+    }
+
+    #playpause {
+      width:26px;
+      background-image:url(playpause.png);
+    }
+    #previous {
+      background-image:url(prev.png);
+    }
+    #next {
+      background-image:url(next.png);
+    }
+    #open {
+      background-image:url(open.png);
+    }
+  </style>
+ <script src="prefs.js"></script>
+
+ <script>
+   var gs_tab = false;
+   
+   var playerTab = false;
+   //find player tab
+   function get_gs_tab(callback,arg) {
+     var url = prefs.getSiteUrl();
+     chrome.windows.getAll({'populate':true}, function(win) {
+
+       for(var i=0, l=win.length; i<l; i++) {
+         var thisWin = win[i];
+         var tabs = thisWin.tabs;
+         for(var j=0, k=tabs.length; j<k; j++) {
+           var tab=tabs[j];
+           if(tab.url.indexOf(url)==0) {
+            gs_tab = tab;
+            if(typeof callback == "function") {
+              callback(arg);
+            }
+            return;
+           }
+         }
+       }
+       get_gs_tab_fail();
+     });
+  }
+  get_gs_tab(enable_buttons);
+
+  function enable_buttons() {
+    var buttons = document.getElementsByTagName('button');
+    for(var i=0,l=buttons.length;i<l;i++) {
+      buttons[i].removeAttribute('disabled');
+    }
+  }
+  
+  function buttonClick(e) {
+    var button = e.target;
+    var action = button.id;
+    if(gs_tab) {
+      send_play_control(action);
+    } else {
+      get_gs_tab(send_play_control,action);
+    }
+  }
+  function get_gs_tab_fail() {
+    var url = prefs.getSiteUrl();
+    chrome.tabs.create({url:url});
+    window.close();
+  }
+  function send_play_control(action) {
+    chrome.tabs.sendRequest(gs_tab.id, {action:action});
+  }
+  
+  function activate_gs_tab() {
+    if(gs_tab) {
+    var windowId = gs_tab.windowId;
+      chrome.tabs.update(gs_tab.id,{selected:true});
+      chrome.windows.update(windowId,{focused:true});
+    } else {
+      get_gs_tab_fail();
+    }
+  }
+  
+  function init() {
+    var buttons = document.getElementsByTagName('button');
+    for(var i=0, l=buttons.length; i<l; i++) {
+      var button = buttons[i];
+      if(button.id == 'open') {
+        button.addEventListener('click', activate_gs_tab, true);
+      } else {
+        button.addEventListener('click', buttonClick, true);
+      }
+    }
+  }
+</script>
+</head>
+<body onload="init()">
+  <button class="player_button" disabled="disabled" type="button" id="previous" >
+  <button class="player_button" disabled="disabled" type="button" id="playpause" >
+  <button class="player_button" disabled="disabled" type="button" id="next" >
+  <button class="player_button" disabled="disabled" type="button" id="open" >
+</body></html>

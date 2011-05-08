@@ -1,0 +1,94 @@
+<html
+  <head>
+    <style>
+      body{
+        background-color:#ddd;
+        color:#888;
+        font-family:arial,verdana,sans-serif;
+        text-shadow:0px 1px 0px white;
+      }
+      section#main {
+        width:400px;
+        margin:0 auto;
+      }
+      label {
+        text-align:right;
+        width:75px;
+        margin-right:5px;
+        font-weight:bold;
+        float:left;
+        height:30px;
+        line-height:30px
+      }
+      fieldset {
+        padding:10px;
+        margin-bottom:10px;
+        background-color:#d9d9d9;
+        border:1px solid #eee;
+        border-radius:5px;
+      }
+      fieldset h1 {
+        font-size:18px;
+        color:#777;
+        margin-top:0;
+      }
+      select {
+        background-color:#e3e3e3;
+        line-height:30px;
+        border-color:#999;
+        color:#777;
+        height:30px;
+      }
+      .field {
+        
+      }
+      .fieldpair {
+        margin-bottom:4px;
+      }
+    </style>
+
+    <script src="prefs.js"></script>
+    <script>
+      var optionPage = {
+        nodes : {},       
+        init : function() {        
+          var This = this;
+
+          this.nodes.prefer = document.getElementById('prefer');
+          var currentSetting = prefs.getPrefer();
+          
+          if (currentSetting) {
+            this.nodes.prefer.value = currentSetting;
+          }          
+          
+          this.nodes.prefer.addEventListener('change', function(e) {
+            prefs.setPrefer(e.target.value);
+          });
+        }
+      };
+      function init() {
+        optionPage.init();
+      }
+    </script>
+  </head>
+  <body onload="init()">
+    <section id="main">
+      <h1>Options</h1>
+      <form>
+        <fieldset>
+          <div class="fieldpair">
+            <label for="prefer">Prefer:</label>
+            <div id="prefer-field" class="field">
+              <select id="prefer" name="prefer">
+                <option value="listen">grooveshark.com</option>
+                <option value="preview">preview.grooveshark.com</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+        
+      </form>
+    </section>
+  </body>
+  
+</html>

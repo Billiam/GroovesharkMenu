@@ -1,0 +1,25 @@
+{
+  "name": "ChromeShark",
+  "version": "0.2.4",
+  "description": "Very, very basic controls for Grooveshark Player",
+  "browser_action": {
+    "default_icon": "favicon.png",
+    "popup": "popup.html"
+  },
+  "permissions" :[
+		"tabs"
+  ],
+  "options_page": "options.html",
+  "icons": {
+             "16": "icon16.png",
+	           "32": "icon32.png",
+	           "48": "icon48.png",
+	          "128": "icon128.png"
+	 },
+  "content_scripts": [{
+    "matches": ["http://grooveshark.com/*",
+    "http://preview.grooveshark.com/*"],
+    "js": ["grooveshark_interface.js"],
+    "run_at": "document_end"
+  }]
+}
