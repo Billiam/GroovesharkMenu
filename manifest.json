@@ -1,5 +1,5 @@
 {
-  "name": "ChromeShark",
+  "name": "GroovesharkMenu",
   "version": "0.2.4",
   "description": "Very, very basic controls for Grooveshark Player",
   "browser_action": {

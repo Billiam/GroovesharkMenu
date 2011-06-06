@@ -1,10 +1,10 @@
 window.addEventListener('message', function(e) {
   if (e.origin == document.location.origin) {
-    chromesharkMessage(e.data);
+    groovesharkMenuMessage(e.data);
   }
 }, false);
 
-function chromesharkMessage(action)
+function groovesharkMenuMessage(action)
 {
   var player = GS.player;
   switch(action) {
